@@ -36,7 +36,6 @@ positions = np.random.random((config.PARTICLE_AMOUNT,2))*(config.WIDTH, config.H
 velocities = np.random.random(positions.shape)*config.SPEED_MULTIPLIER
 is_stuck = np.full(config.PARTICLE_AMOUNT,False)
 is_stuck[0] = True
-is_stuck[1] = True
 while running:
     
     for event in pygame.event.get():
