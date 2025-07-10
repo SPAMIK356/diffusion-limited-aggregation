@@ -8,6 +8,11 @@ def draw_circles(positions: np.typing.NDArray, radius: float, color: tuple, surf
     for x, y in positions:
         pygame.draw.circle(surface, color, (x,y),radius)
 
+def wrap(positions: np.typing.NDArray, x_limit:float, y_limit:float, offset:float):
+    positions[positions[:,0]>x_limit+offset,0] = -offset
+    positions[positions[:,0]<-offset,0] = x_limit+offset
+    positions[positions[:,1]>y_limit+offset,1] = -offset
+    positions[positions[:,1]<-offset,1] = y_limit+offset
 
 #Pygame initialisation
 pygame.init()
@@ -38,7 +43,7 @@ while running:
     
     velocities*= config.DAMPING
 
-
+    wrap(positions, config.WIDTH, config.HEIGHT, config.RADIUS)
     
 
 
