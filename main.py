@@ -24,6 +24,8 @@ running = True
 #Particles
 positions = np.random.random((config.PARTICLE_AMOUNT,2))*(config.WIDTH, config.HEIGHT)
 velocities = np.random.random(positions.shape)*config.SPEED_MULTIPLIER
+is_stuck = np.full(config.PARTICLE_AMOUNT,False)
+is_stuck[0] = True
 
 while running:
     
@@ -39,6 +41,8 @@ while running:
     
     deltaTime = clock.tick(config.FPS_LIMIT) / 1000.0
 
+    velocities[is_stuck] = 0
+    print(velocities)
     positions+= velocities*deltaTime
     
     velocities*= config.DAMPING
