@@ -1,0 +1,14 @@
+#Window option
+WIDTH = 1280
+HEIGHT = 720
+FPS_LIMIT = 0
+CAPTION = 'Diffusion-limited Agregation'
+
+#Simulation options
+PARTICLE_AMOUNT = 500
+RADIUS = 5.0
+COLOR = (255,0,0)
+SPEED_MULTIPLIER = 1000.0
+DAMPING = 1
+RENDER_NOT_STUCK = False
+STUCK_MULTIPPLIER = 1.9
