@@ -4,15 +4,25 @@ import numpy as np
 import config
 
 
-def draw_circles(positions: np.typing.NDArray, radius: float, color: tuple, surface: Surface) -> None:
-    for x, y in positions:
-        pygame.draw.circle(surface, color, (x,y),radius)
+def draw_circles(positions: np.typing.NDArray, radius: float, color: tuple, surface: Surface, render_not_stuck = True, is_stuck = None) -> None:
+    if render_not_stuck:
+        for x, y in positions:
+            pygame.draw.circle(surface, color, (x,y),radius)
+        return
+    for x, y in positions[is_stuck]:
+            pygame.draw.circle(surface, color, (x,y),radius)
 
-def wrap(positions: np.typing.NDArray, x_limit:float, y_limit:float, offset:float):
+def wrap(positions: np.typing.NDArray, x_limit:float, y_limit:float, offset:float) -> None:
     positions[positions[:,0]>x_limit+offset,0] = -offset
     positions[positions[:,0]<-offset,0] = x_limit+offset
     positions[positions[:,1]>y_limit+offset,1] = -offset
     positions[positions[:,1]<-offset,1] = y_limit+offset
+
+def calculate_distance(positions: np.typing.NDArray, is_stuck: np.typing.NDArray) -> np.typing.NDArray:
+    stuck_pos = positions[is_stuck]
+    rel_positions = positions[:, np.newaxis,:]-stuck_pos[np.newaxis,:,:]
+    distances = np.sum(rel_positions**2, 2)
+    return np.sqrt(distances)
 
 #Pygame initialisation
 pygame.init()
@@ -42,11 +52,10 @@ while running:
     deltaTime = clock.tick(config.FPS_LIMIT) / 1000.0
 
     velocities[is_stuck] = 0
-    print(velocities)
     positions+= velocities*deltaTime
     
     velocities*= config.DAMPING
-
+    
     wrap(positions, config.WIDTH, config.HEIGHT, config.RADIUS)
     
 
