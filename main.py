@@ -36,6 +36,10 @@ while running:
 
     positions+= velocities*deltaTime
     
+    velocities*= config.DAMPING
+
+
+    
 
 
 
