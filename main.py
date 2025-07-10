@@ -36,7 +36,7 @@ positions = np.random.random((config.PARTICLE_AMOUNT,2))*(config.WIDTH, config.H
 velocities = np.random.random(positions.shape)*config.SPEED_MULTIPLIER
 is_stuck = np.full(config.PARTICLE_AMOUNT,False)
 is_stuck[0] = True
-
+is_stuck[1] = True
 while running:
     
     for event in pygame.event.get():
@@ -56,6 +56,11 @@ while running:
     
     velocities*= config.DAMPING
     
+    distances = calculate_distance(positions, is_stuck)
+    closeness_mask = np.sum(distances<config.RADIUS,1).astype(np.bool)
+
+    is_stuck[closeness_mask] = True
+
     wrap(positions, config.WIDTH, config.HEIGHT, config.RADIUS)
     
 
