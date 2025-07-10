@@ -36,6 +36,7 @@ positions = np.random.random((config.PARTICLE_AMOUNT,2))*(config.WIDTH, config.H
 velocities = np.random.random(positions.shape)*config.SPEED_MULTIPLIER
 is_stuck = np.full(config.PARTICLE_AMOUNT,False)
 is_stuck[0] = True
+render_not_stuck = config.RENDER_NOT_STUCK
 while running:
     
     for event in pygame.event.get():
@@ -43,7 +44,7 @@ while running:
             running = False
 
     screen.fill((255,255,255))
-    draw_circles(positions,config.RADIUS, config.COLOR, screen)
+    draw_circles(positions,config.RADIUS, config.COLOR, screen, render_not_stuck, is_stuck)
 
     pygame.display.flip()
 
@@ -56,7 +57,7 @@ while running:
     velocities*= config.DAMPING
     
     distances = calculate_distance(positions, is_stuck)
-    closeness_mask = np.sum(distances<config.RADIUS,1).astype(np.bool)
+    closeness_mask = np.sum(distances<config.RADIUS*config.STUCK_MULTIPPLIER,1).astype(np.bool)
 
     is_stuck[closeness_mask] = True
 
