@@ -4,9 +4,14 @@ import numpy as np
 from numpy.typing import NDArray
 import config
 
-def draw_grid(grid: NDArray, sim_surface: Surface, width, height) -> Surface:
+def draw_grid(grid: NDArray, width, height) -> Surface:
     '''Generate a surface with grid and scales it to width and height'''
-    pygame.surfarray.blit_array(sim_surface,grid)
+    sim_surface = Surface(grid.shape)
+
+    colored_grid = np.full((grid.shape[0],grid.shape[1],3), (0,0,0))
+    colored_grid[grid] = (255,255,255)
+
+    pygame.surfarray.blit_array(sim_surface,colored_grid)
     scaled_surface = pygame.transform.scale(sim_surface, (width, height))
     return scaled_surface
 
@@ -35,10 +40,14 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    walkers = np.random.randint(0, config.WIDTH, (config.PARTICLE_AMOUNT, 2))
-    print(find_neighbours(is_stuck, walkers))
+    walkers = np.random.randint(1, config.WIDTH-1, (config.PARTICLE_AMOUNT, 2))
+    have_neigbours = find_neighbours(is_stuck,walkers)
+
+    is_stuck[walkers[have_neigbours,0], walkers[have_neigbours,1]] = True
+
     screen.fill((255,255,255))
-    #render here
+    
+    screen.blit(draw_grid(is_stuck,config.WIDTH,config.HEIGHT), (0,0))
 
     pygame.display.flip()
 
