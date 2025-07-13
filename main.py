@@ -46,6 +46,12 @@ while running:
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            image_surface = Surface(is_stuck.shape)
+
+            colored_pixels = np.full((is_stuck.shape[0], is_stuck.shape[1], 3), (0,0,0))
+            colored_pixels[is_stuck] = (255,255,255)
+            pygame.surfarray.blit_array(image_surface, colored_pixels)
+            pygame.image.save(image_surface,'image.png')
             running = False
 
     
