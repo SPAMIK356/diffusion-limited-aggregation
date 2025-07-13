@@ -15,7 +15,7 @@ def draw_grid(grid: NDArray, width, height) -> Surface:
     scaled_surface = pygame.transform.scale(sim_surface, (width, height))
     return scaled_surface
 
-def wrap(positions: np.typing.NDArray, x_limit:float, y_limit:float, offset:float) -> None:
+def wrap(positions: np.typing.NDArray, x_limit:float, y_limit:float) -> None:
     positions[positions[:,0]>x_limit-1,0] = 1
     positions[positions[:,0]<1,0] = x_limit-1
     positions[positions[:,1]>y_limit-1,1] = 1
