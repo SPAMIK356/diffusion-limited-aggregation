@@ -50,14 +50,15 @@ while running:
     have_neigbours = find_neighbours(is_stuck,walkers)
 
     is_stuck[walkers[have_neigbours,0], walkers[have_neigbours,1]] = True
-    velocities[have_neigbours] = 0
+
     screen.fill((255,255,255))
     
     screen.blit(draw_grid(is_stuck,config.WIDTH,config.HEIGHT), (0,0))
 
     pygame.display.flip()
 
-
+    walkers = walkers[np.logical_not(have_neigbours)]
+    velocities = velocities[np.logical_not(have_neigbours)]
     walkers+=velocities
     wrap(walkers, config.SIM_WIDTH, config.SIM_HEIGHT)
     clock.tick(config.FPS_LIMIT)
