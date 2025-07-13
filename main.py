@@ -8,7 +8,7 @@ def draw_grid(grid: NDArray, width, height) -> Surface:
     '''Generate a surface with grid and scales it to width and height'''
     sim_surface = Surface(grid.shape)
 
-    colored_grid = np.full((grid.shape[0],grid.shape[1],3), (0,0,0))
+    colored_grid = np.zeros((*grid.shape, 3), dtype=np.uint8)
     colored_grid[grid] = (255,255,255)
 
     pygame.surfarray.blit_array(sim_surface,colored_grid)
@@ -58,8 +58,6 @@ while running:
     have_neigbours = find_neighbours(is_stuck,walkers)
 
     is_stuck[walkers[have_neigbours,0], walkers[have_neigbours,1]] = True
-
-    screen.fill((255,255,255))
     
     screen.blit(draw_grid(is_stuck,config.WIDTH,config.HEIGHT), (0,0))
 
