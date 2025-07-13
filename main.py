@@ -25,6 +25,8 @@ def find_neighbours(is_stuck : NDArray, walkers : NDArray):
     have_neigbours = np.full(walkers.shape[0], False)
     for a in [-1,0,1]:
         for b in [-1,0,1]:
+            if a == 0 and b == 0:
+                continue
             have_neigbours += is_stuck[walkers[:,0]+a, walkers[:,1]+b]
     return have_neigbours
 
