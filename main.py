@@ -15,6 +15,12 @@ def draw_grid(grid: NDArray, width, height) -> Surface:
     scaled_surface = pygame.transform.scale(sim_surface, (width, height))
     return scaled_surface
 
+def wrap(positions: np.typing.NDArray, x_limit:float, y_limit:float, offset:float) -> None:
+    positions[positions[:,0]>x_limit-1,0] = 1
+    positions[positions[:,0]<1,0] = x_limit-1
+    positions[positions[:,1]>y_limit-1,1] = 1
+    positions[positions[:,1]<1,1] = y_limit-1
+
 def find_neighbours(is_stuck : NDArray, walkers : NDArray):
     have_neigbours = np.full(walkers.shape[0], False)
     for a in range(-1, 2):
