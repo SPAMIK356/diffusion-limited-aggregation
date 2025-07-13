@@ -27,7 +27,7 @@ def find_neighbours(is_stuck : NDArray, walkers : NDArray):
         for b in [-1,0,1]:
             if a == 0 and b == 0:
                 continue
-            have_neigbours += is_stuck[walkers[:,0]+a, walkers[:,1]+b]
+            have_neigbours |= is_stuck[walkers[:,0]+a, walkers[:,1]+b]
     return have_neigbours
 
 #Pygame initialisation
@@ -41,7 +41,7 @@ running = True
 is_stuck = np.full((config.SIM_WIDTH, config.SIM_HEIGHT),False)
 is_stuck[int(config.SIM_WIDTH/2), int(config.SIM_HEIGHT/2)] = True
 walkers = np.random.randint(1, config.SIM_WIDTH-1, (config.PARTICLE_AMOUNT, 2))
-velocities = np.random.randint(-1, 2, (config.PARTICLE_AMOUNT, 2))
+
 while running:
     
     for event in pygame.event.get():
@@ -49,9 +49,14 @@ while running:
             running = False
 
     
-    have_neigbours = find_neighbours(is_stuck,walkers)
-
-    is_stuck[walkers[have_neigbours,0], walkers[have_neigbours,1]] = True
+    
+    for a in range(config.TIMESTEP_PER_FRAME):
+        have_neigbours = find_neighbours(is_stuck,walkers)
+        is_stuck[walkers[have_neigbours,0], walkers[have_neigbours,1]] = True
+        walkers = walkers[np.logical_not(have_neigbours)]
+        random_step = np.random.randint(-1, 2, size=walkers.shape)
+        walkers+=random_step
+        wrap(walkers, config.SIM_WIDTH, config.SIM_HEIGHT)
 
     screen.fill((255,255,255))
     
@@ -59,10 +64,6 @@ while running:
 
     pygame.display.flip()
 
-    walkers = walkers[np.logical_not(have_neigbours)]
-    velocities = velocities[np.logical_not(have_neigbours)]
-    walkers+=velocities
-    wrap(walkers, config.SIM_WIDTH, config.SIM_HEIGHT)
     clock.tick(config.FPS_LIMIT)
 
     
