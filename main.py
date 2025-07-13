@@ -16,17 +16,15 @@ def draw_grid(grid: NDArray, width, height) -> Surface:
     return scaled_surface
 
 def wrap(positions: np.typing.NDArray, x_limit:float, y_limit:float) -> None:
-    positions[positions[:,0]>x_limit-1,0] = 1
-    positions[positions[:,0]<1,0] = x_limit-1
-    positions[positions[:,1]>y_limit-1,1] = 1
-    positions[positions[:,1]<1,1] = y_limit-1
+    positions[positions[:,0]>x_limit-2,0] = 1
+    positions[positions[:,0]<1,0] = x_limit-2
+    positions[positions[:,1]>y_limit-2,1] = 1
+    positions[positions[:,1]<1,1] = y_limit-2
 
 def find_neighbours(is_stuck : NDArray, walkers : NDArray):
     have_neigbours = np.full(walkers.shape[0], False)
-    for a in range(-1, 2):
-        for b in range(-1,2):
-            if a == 0 and b == 0:
-                continue
+    for a in [-1,0,1]:
+        for b in [-1,0,1]:
             have_neigbours += is_stuck[walkers[:,0]+a, walkers[:,1]+b]
     return have_neigbours
 
@@ -61,6 +59,8 @@ while running:
 
 
     walkers+=velocities
+    wrap(walkers, config.WIDTH, config.HEIGHT)
+    clock.tick(config.FPS_LIMIT)
 
     
 
