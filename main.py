@@ -36,9 +36,9 @@ clock = pygame.time.Clock()
 running = True
 
 #Particles
-is_stuck = np.full((config.WIDTH, config.HEIGHT),False)
-is_stuck[int(config.WIDTH/2), int(config.HEIGHT/2)] = True
-walkers = np.random.randint(1, config.WIDTH-1, (config.PARTICLE_AMOUNT, 2))
+is_stuck = np.full((config.SIM_WIDTH, config.SIM_HEIGHT),False)
+is_stuck[int(config.SIM_WIDTH/2), int(config.SIM_HEIGHT/2)] = True
+walkers = np.random.randint(1, config.SIM_WIDTH-1, (config.PARTICLE_AMOUNT, 2))
 velocities = np.random.randint(-1, 2, (config.PARTICLE_AMOUNT, 2))
 while running:
     
@@ -50,7 +50,7 @@ while running:
     have_neigbours = find_neighbours(is_stuck,walkers)
 
     is_stuck[walkers[have_neigbours,0], walkers[have_neigbours,1]] = True
-
+    velocities[have_neigbours] = 0
     screen.fill((255,255,255))
     
     screen.blit(draw_grid(is_stuck,config.WIDTH,config.HEIGHT), (0,0))
@@ -59,7 +59,7 @@ while running:
 
 
     walkers+=velocities
-    wrap(walkers, config.WIDTH, config.HEIGHT)
+    wrap(walkers, config.SIM_WIDTH, config.SIM_HEIGHT)
     clock.tick(config.FPS_LIMIT)
 
     
