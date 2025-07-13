@@ -34,13 +34,15 @@ running = True
 #Particles
 is_stuck = np.full((config.WIDTH, config.HEIGHT),False)
 is_stuck[int(config.WIDTH/2), int(config.HEIGHT/2)] = True
+walkers = np.random.randint(1, config.WIDTH-1, (config.PARTICLE_AMOUNT, 2))
+velocities = np.random.randint(-1, 2, (config.PARTICLE_AMOUNT, 2))
 while running:
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    walkers = np.random.randint(1, config.WIDTH-1, (config.PARTICLE_AMOUNT, 2))
+    
     have_neigbours = find_neighbours(is_stuck,walkers)
 
     is_stuck[walkers[have_neigbours,0], walkers[have_neigbours,1]] = True
@@ -50,6 +52,9 @@ while running:
     screen.blit(draw_grid(is_stuck,config.WIDTH,config.HEIGHT), (0,0))
 
     pygame.display.flip()
+
+
+    walkers+=velocities
 
     
 
